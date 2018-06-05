@@ -14,24 +14,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('new user connected');
 
-  // socket.emit('newEmail', {
-  //   from: 'name@example.com',
-  //   text: 'hello beautiful',
-  //   createdAt: 123
-  // });
 
-  socket.emit('newMessage', {
-    from: 'user1',
-    text: 'sample message',
-    createdAt: 246
-  })
-
-  // socket.on('createEmail', (newEmail) => {
-  //   console.log('createEmail', newEmail);
-  // });
-
-  socket.on('createMessage', (newMessage) => {
-    console.log('createMessage', newMessage);
+  socket.on('createMessage', (message) => {
+    console.log('createMessage', message);
+    io.emit('newMessage', {       //io. emmit -emits to all users
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   socket.on('disconnect', () => {
@@ -42,10 +32,3 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Started up on ${port}`);
 });
-
-module.exports = {app};
-
-
-//
-// console.log(__dirname + '/../public');
-// console.log(publicPath);
